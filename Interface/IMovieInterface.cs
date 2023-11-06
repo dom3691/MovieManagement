@@ -1,4 +1,6 @@
-﻿namespace MovieManagement.Interface
+﻿using MovieManagement.Model;
+
+namespace MovieManagement.Interface
 {
     public interface IMovieInterface
     {
