@@ -1,78 +1,72 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MovieManagement.Interface;
 using MovieManagement.Model;
 
-namespace MovieManagement.Controllers
+namespace MovieManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MovieController : ControllerBase
+    public class MoviesController : ControllerBase
     {
-        [Route("api/[controller]")]
-        [ApiController]
-        public class MoviesController : ControllerBase
+        private readonly IMovieService _moviesService;
+
+        public MoviesController(IMovieService moviesService)
         {
-            private readonly IMovieService _moviesService;
+            _moviesService = moviesService;
+        }
 
-            public MoviesController(IMovieService moviesService)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
+        {
+            return Ok(await _moviesService.GetMovies());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Movie>> GetMovie(int id)
+        {
+            var movie = await _moviesService.GetMovie(id);
+
+            if (movie == null)
             {
-                _moviesService = moviesService;
+                return NotFound();
             }
 
-            [HttpGet]
-            public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
+            return Ok(movie);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Movie>> CreateMovie(Movie movie)
+        {
+            var createdMovie = await _moviesService.CreateMovie(movie);
+
+            return CreatedAtAction(nameof(GetMovie), new { id = createdMovie.Id }, createdMovie);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMovie(int id, Movie movie)
+        {
+            try
             {
-                return Ok(await _moviesService.GetMovies());
+                await _moviesService.UpdateMovie(id, movie);
+                return NoContent();
             }
-
-            [HttpGet("{id}")]
-            public async Task<ActionResult<Movie>> GetMovie(int id)
+            catch (ArgumentException ex)
             {
-                var movie = await _moviesService.GetMovie(id);
-
-                if (movie == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(movie);
+                return BadRequest(ex.Message);
             }
+        }
 
-            [HttpPost]
-            public async Task<ActionResult<Movie>> CreateMovie(Movie movie)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMovie(int id)
+        {
+            try
             {
-                var createdMovie = await _moviesService.CreateMovie(movie);
-
-                return CreatedAtAction(nameof(GetMovie), new { id = createdMovie.Id }, createdMovie);
+                await _moviesService.DeleteMovie(id);
+                return NoContent();
             }
-
-            [HttpPut("{id}")]
-            public async Task<IActionResult> UpdateMovie(int id, Movie movie)
+            catch (ArgumentException ex)
             {
-                try
-                {
-                    await _moviesService.UpdateMovie(id, movie);
-                    return NoContent();
-                }
-                catch (ArgumentException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-
-            [HttpDelete("{id}")]
-            public async Task<IActionResult> DeleteMovie(int id)
-            {
-                try
-                {
-                    await _moviesService.DeleteMovie(id);
-                    return NoContent();
-                }
-                catch (ArgumentException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                return BadRequest(ex.Message);
             }
         }
     }
