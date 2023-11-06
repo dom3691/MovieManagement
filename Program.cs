@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MovieManagement.Data;
+using MovieManagement.Interface;
 using MovieManagement.Service;
 
 var builder = WebApplication.CreateBuilder(args);

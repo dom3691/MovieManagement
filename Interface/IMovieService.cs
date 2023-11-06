@@ -2,7 +2,7 @@
 
 namespace MovieManagement.Interface
 {
-    public interface IMovieInterface
+    public interface IMovieService
     {
         Task<IEnumerable<Movie>> GetMovies();
         Task<Movie> GetMovie(int id);

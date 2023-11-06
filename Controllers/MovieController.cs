@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MovieManagement.Interface;
 using MovieManagement.Model;
 
 namespace MovieManagement.Controllers

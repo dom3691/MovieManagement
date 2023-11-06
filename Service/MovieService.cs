@@ -5,11 +5,11 @@ using MovieManagement.Model;
 
 namespace MovieManagement.Service
 {
-    public class MovieService : IMovieInterface
+    public class MovieService : IMovieService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplcationDbContext _context;
 
-        public MovieService(ApplicationDbContext context)
+        public MovieService(ApplcationDbContext context)
         {
             _context = context;
         }
